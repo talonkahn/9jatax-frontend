@@ -1,0 +1,198 @@
+/* ===========================
+   CONTAINER + HEADER
+=========================== */
+
+.coa-container {
+  max-width: 900px;
+  margin: 2rem auto;
+  background: #0f0f0f;
+  border-radius: 12px;
+  padding: 2rem;
+  color: #fff;
+  font-family: sans-serif;
+  box-shadow: 0 0 25px rgba(0,0,0,0.4);
+}
+
+.coa-container h1 {
+  margin-bottom: 0.5rem;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.coa-description {
+  opacity: 0.8;
+  margin-bottom: 1.5rem;
+  line-height: 1.4;
+}
+
+
+
+/* ===========================
+   SEARCH BAR
+=========================== */
+
+.coa-search {
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  background: #1a1a1a;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #333;
+}
+
+.coa-search input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.coa-search input::placeholder {
+  color: #777;
+}
+
+
+
+/* ===========================
+   CATEGORY HEADER
+=========================== */
+
+.coa-category {
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  background: #161616;
+  border: 1px solid #242424;
+}
+
+.coa-toggle {
+  width: 100%;
+  background: none;
+  color: #fff;
+  border: none;
+  text-align: left;
+  padding: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.coa-toggle:hover {
+  background: #1e1e1e;
+}
+
+.coa-icon {
+  font-size: 1rem;
+}
+
+
+
+/* ===========================
+   ACCOUNT LIST + ITEMS
+=========================== */
+
+.coa-list {
+  padding: 0.7rem 1rem 1rem 1rem;
+}
+
+.coa-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  background: #1a1a1a;
+  border: 1px solid #222;
+  transition: 0.2s;
+}
+
+.coa-item:hover {
+  background: #222;
+  border-color: #444;
+}
+
+.coa-premium {
+  background: #1a1a1a;
+  border-color: #4b2bff;
+  position: relative;
+}
+
+.coa-premium:hover {
+  background: #231b3c;
+  border-color: #6c4cff;
+}
+
+.coa-lock {
+  color: #a78bfa;
+  font-size: 1.1rem;
+}
+
+.coa-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.coa-code-name {
+  font-weight: 600;
+}
+
+.coa-desc {
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+
+
+/* ===========================
+   CREATE BUTTON (PREMIUM)
+=========================== */
+
+.coa-create-btn {
+  margin-top: 1.5rem;
+  width: 100%;
+  padding: 1rem;
+  border-radius: 8px;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  background: #2d2d2d;
+  color: #999;
+  cursor: not-allowed;
+}
+
+.coa-lock-small {
+  font-size: 0.9rem;
+}
+
+
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media (max-width: 500px) {
+  .coa-container {
+    padding: 1.5rem;
+  }
+
+  .coa-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .coa-lock {
+    align-self: flex-end;
+  }
+}

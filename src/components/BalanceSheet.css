@@ -1,0 +1,85 @@
+/* BalanceSheet.css */
+.bs-container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1rem;
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #222;
+}
+
+.bs-cards {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.bs-card {
+  flex: 1 1 30%;
+  padding: 1.5rem;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: bold;
+  text-align: center;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+
+.bs-assets {
+  background: #4caf50; /* green */
+}
+
+.bs-liabilities {
+  background: #f44336; /* red */
+}
+
+.bs-equity {
+  background: #2196f3; /* blue */
+}
+
+.bs-label {
+  display: block;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.bs-value {
+  font-size: 1.5rem;
+}
+
+.bs-status {
+  text-align: center;
+  margin-top: 2rem;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.balanced {
+  color: green;
+}
+
+.not-balanced {
+  color: red;
+}
+
+.bs-error {
+  text-align: center;
+  color: red;
+  font-weight: bold;
+}
+.bs-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+.bs-value {
+  color: #fff; /* keep it white on colored cards */
+}
+
+.bs-label {
+  color: #fff; /* ensure label text shows on colored background */
+}

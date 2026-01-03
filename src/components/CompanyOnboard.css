@@ -1,0 +1,72 @@
+/* CompanyOnboard.css */
+.company-container {
+  max-width: 600px;
+  margin: 50px auto;
+  background: #111;
+  color: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.company-container h1 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.company-sub {
+  text-align: center;
+  color: #aaa;
+  margin-bottom: 30px;
+}
+
+.company-card {
+  background: #1c1c1c;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+}
+
+.company-card h2 {
+  margin-bottom: 15px;
+  color: #eee;
+}
+
+.company-card input,
+.company-card select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #333;
+  border-radius: 8px;
+  background: #222;
+  color: #fff;
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.checkbox-row input {
+  margin-right: 10px;
+  accent-color: #fff;
+}
+
+.company-save-btn {
+  width: 100%;
+  padding: 12px;
+  background: #fff;
+  color: #111;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.company-save-btn:hover {
+  background: #eee;
+}
