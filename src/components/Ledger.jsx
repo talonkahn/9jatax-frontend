@@ -2,19 +2,20 @@ import React, { useEffect, useState } from "react";
 import api from "../api";
 import "./Ledger.css";
 
-export default function Ledger() {
+export default function Ledger({ companyId }) {
   const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   const loadLedger = async () => {
+    if (!companyId) return setError("Company ID missing");
     setLoading(true);
     setError("");
     try {
-      const { data } = await api.get("/ledger");
+      const { data } = await api.get(`/ledger/company/${companyId}`);
       setEntries(data || []);
     } catch (err) {
-      console.error("Ledger load failed:", err.response?.data || err.message);
+      console.error("Ledger fetch failed:", err.response?.data || err.message);
       setError("Failed to load ledger entries");
     } finally {
       setLoading(false);
@@ -23,7 +24,7 @@ export default function Ledger() {
 
   useEffect(() => {
     loadLedger();
-  }, []);
+  }, [companyId]);
 
   if (loading) return <div className="ledger-container">Loading ledger…</div>;
   if (error) return <div className="ledger-error">{error}</div>;
