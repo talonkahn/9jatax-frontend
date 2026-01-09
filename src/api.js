@@ -23,7 +23,7 @@ api.interceptors.request.use(
 
     if (token && !isAuthRoute) {
       config.headers = config.headers || {};
-      config.headers.Authorization = Bearer ${token};
+      config.headers.Authorization = `Bearer ${token}`;
     }
 
     return config;
