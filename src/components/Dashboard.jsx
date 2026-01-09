@@ -10,6 +10,7 @@ import {
   FaChevronUp,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import api from "../api"; // ✅ Use centralized API (Render backend + JWT handled)
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -25,8 +26,8 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // ✅ UNIFY TOKEN KEY
-    const TOKEN = localStorage.getItem("token") || localStorage.getItem("9jatax_token");
+    // ✅ Check token and company ID
+    const TOKEN = localStorage.getItem("9jatax_token");
     const COMPANY_ID = localStorage.getItem("company_id");
 
     if (!TOKEN || !COMPANY_ID) {
@@ -36,19 +37,8 @@ export default function Dashboard() {
 
     async function loadDashboard() {
       try {
-        const res = await fetch(
-          "http://localhost:4000/api/reports/dashboard",
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${TOKEN}`, 
-            },
-          }
-        );
-
-        if (!res.ok) throw new Error("Dashboard fetch failed");
-
-        const data = await res.json();
+        // ✅ Use api.js instead of fetch with localhost
+        const { data } = await api.get("/reports/dashboard");
 
         setStats({
           income: Number(data.income ?? 0),
@@ -57,19 +47,19 @@ export default function Dashboard() {
           invoices: Number(data.invoices ?? 0),
         });
 
-       setRecent(
-  Array.isArray(data.recent)
-    ? data.recent.map((r) => ({
-        id: r.id,
-        date: r.date,
-        name: r.description || "Transaction",
-        amount: Number(r.amount),
-        type: r.type, // use backend type directly
-      }))
-    : []
-);
+        setRecent(
+          Array.isArray(data.recent)
+            ? data.recent.map((r) => ({
+                id: r.id,
+                date: r.date,
+                name: r.description || "Transaction",
+                amount: Number(r.amount),
+                type: r.type, // use backend type directly
+              }))
+            : []
+        );
       } catch (err) {
-        console.error("DASHBOARD ERROR:", err);
+        console.error("DASHBOARD ERROR:", err.response?.data || err.message);
         setStats({ income: 0, expenses: 0, profit: 0, invoices: 0 });
         setRecent([]);
       } finally {
@@ -131,11 +121,12 @@ export default function Dashboard() {
       ) : (
         <div className="dash-activity">
           {visibleRecent.map((item) => (
-
-<div className="dash-item" key={item.id}>
+            <div className="dash-item" key={item.id}>
               <div className="dash-item-main">
                 <div className="dash-item-name">{item.name}</div>
-                <div className="dash-item-type">{item.type}</div>
+                <div className="dash-item-type">{item.
+
+type}</div>
               </div>
               <div className="dash-item-side">
                 <div

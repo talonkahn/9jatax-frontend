@@ -40,7 +40,10 @@ export default function Auth() {
         navigate("/settings/company");
       }
     } catch (err) {
-      console.error("AUTH ERROR:", err);
+      console.error(
+        "AUTH ERROR:",
+        err.response?.data  err.message  err
+      );
       alert(
         err.response?.data?.error ||
           "Authentication failed. Please try again."
@@ -61,6 +64,7 @@ export default function Auth() {
             type="email"
             required
             value={email}
+            autoFocus
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
