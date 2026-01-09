@@ -6,39 +6,47 @@ export default function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [mode, setMode] = useState("login");
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
   const submit = async (e) => {
     e.preventDefault();
+    if (loading) return;
+
+    setLoading(true);
 
     try {
       const url = mode === "login" ? "/auth/login" : "/auth/signup";
-      const { data } = await api.post(url, {
-        email,
-        password,
-        name: "Founder",
-      });
+
+      const payload =
+        mode === "login"
+          ? { email, password }
+          : { email, password, name: "Founder" };
+
+      const { data } = await api.post(url, payload);
 
       // Persist auth
       localStorage.setItem("9jatax_token", data.token);
       localStorage.setItem("user_id", data.user.id);
       localStorage.setItem("user_role", data.user.role);
-      localStorage.setItem("user_email", data.user.email); // ✅ essential for onboarding
+      localStorage.setItem("user_email", data.user.email);
 
       if (data.user.company_id) {
         localStorage.setItem("company_id", data.user.company_id);
         navigate("/dashboard");
       } else {
         localStorage.removeItem("company_id");
-        navigate("/settings/company"); // redirect new users to onboarding
+        navigate("/settings/company");
       }
     } catch (err) {
-      console.error(err);
+      console.error("AUTH ERROR:", err);
       alert(
-        "Authentication failed: " +
-          (err.response?.data?.error || err.message)
+        err.response?.data?.error ||
+          "Authentication failed. Please try again."
       );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -49,21 +57,31 @@ export default function Auth() {
       <form onSubmit={submit}>
         <div className="form-row">
           <label>Email</label>
-          <input value={email} onChange={(e) => setEmail(e.target.value)} />
+          <input
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
         </div>
 
         <div className="form-row">
           <label>Password</label>
           <input
             type="password"
+            required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
 
         <div style={{ display: "flex", gap: 8 }}>
-          <button className="button" type="submit">
-            {mode === "login" ? "Login" : "Create"}
+          <button className="button" type="submit" disabled={loading}>
+            {loading
+              ? "Please wait…"
+              : mode === "login"
+              ? "Login"
+              : "Create"}
           </button>
 
           <button
@@ -73,6 +91,7 @@ export default function Auth() {
             }
             className="button"
             style={{ background: "#445" }}
+            disabled={loading}
           >
             Switch
           </button>
