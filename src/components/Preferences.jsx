@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import api from "../api"; // Use your axios instance
 
 export default function Preferences() {
   const COMPANY_ID = localStorage.getItem("company_id");
@@ -11,23 +12,36 @@ export default function Preferences() {
   const fetchPrefs = async () => {
     if (!COMPANY_ID) return;
     try {
-      const res = await fetch(`http://localhost:4000/api/preferences/${COMPANY_ID}`);
-      const data = await res.json();
+      const { data } = await api.get(`/preferences/${COMPANY_ID}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("9jatax_token")}`,
+        },
+      });
       if (data) setPrefs(data);
-    } catch (err) { console.error(err); }
+    } catch (err) {
+      console.error("Fetch preferences failed:", err);
+    }
   };
 
-  useEffect(() => { fetchPrefs(); }, []);
+  useEffect(() => {
+    fetchPrefs();
+  }, []);
 
   const handleSave = async () => {
     try {
-      await fetch("http://localhost:4000/api/preferences", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ company_id: COMPANY_ID, ...prefs }),
-      });
+      await api.post(
+        "/preferences",
+        { company_id: COMPANY_ID, ...prefs },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("9jatax_token")}`,
+          },
+        }
+      );
       alert("Preferences saved");
-    } catch (err) { console.error(err); }
+    } catch (err) {
+      console.error("Save preferences failed:", err);
+    }
   };
 
   return (
@@ -36,17 +50,30 @@ export default function Preferences() {
 
       <label>
         Default Currency:
-        <input value={prefs.default_currency} onChange={e => setPrefs({ ...prefs, default_currency: e.target.value })}/>
+        <input
+          value={prefs.default_currency}
+          onChange={(e) =>
+            setPrefs({ ...prefs, default_currency: e.target.value })
+          }
+        />
       </label>
 
       <label>
         Timezone:
-        <input value={prefs.timezone} onChange={e => setPrefs({ ...prefs, timezone: e.target.value })}/>
+        <input
+          value={prefs.timezone}
+          onChange={(e) => setPrefs({ ...prefs, timezone: e.target.value })}
+        />
       </label>
 
       <label>
         Date Format:
-        <input value={prefs.date_format} onChange={e => setPrefs({ ...prefs, date_format: e.target.value })}/>
+        <input
+          value={prefs.date_format}
+          onChange={(e) =>
+            setPrefs({ ...prefs, date_format: e.target.value })
+          }
+        />
       </label>
 
       <button onClick={handleSave}>Save Preferences</button>
