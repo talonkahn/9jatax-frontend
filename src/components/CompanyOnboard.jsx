@@ -58,7 +58,7 @@ export default function CompanyOnboard() {
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`, // ✅ fixed template literal
           },
         }
       );
@@ -155,9 +155,9 @@ export default function CompanyOnboard() {
           <input
             type="checkbox"
             name="vatRegistered"
-            checked={company.vatRegistered}
 
-onChange={handleChange}
+checked={company.vatRegistered}
+            onChange={handleChange}
           />
           VAT Registered
         </label>
