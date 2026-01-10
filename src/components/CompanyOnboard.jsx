@@ -66,7 +66,7 @@ export default function CompanyOnboard() {
       ===================== */
       const refreshRes = await api.post("/auth/refresh", null, {
         headers: {
-          Authorization: Bearer ${localStorage.getItem("9jatax_token")},
+          Authorization: `Bearer ${localStorage.getItem("9jatax_token")}`,
         },
       });
 
