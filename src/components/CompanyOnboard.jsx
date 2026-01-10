@@ -27,7 +27,7 @@ export default function CompanyOnboard() {
   };
 
   const handleSave = async () => {
-    if (!company.name  !company.rc  !company.tin) {
+    if (!company.name || !company.rc || !company.tin) {
       alert("Please fill Company Name, RC, and TIN.");
       return;
     }
@@ -54,7 +54,7 @@ export default function CompanyOnboard() {
         },
         {
           headers: {
-            Authorization: Bearer ${token},
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -71,7 +71,7 @@ export default function CompanyOnboard() {
         null,
         {
           headers: {
-            Authorization: Bearer ${token},
+            Authorization: `Bearer ${token}`,
           },
         }
       );
