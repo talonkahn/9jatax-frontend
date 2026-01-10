@@ -42,7 +42,7 @@ export default function Auth() {
     } catch (err) {
       console.error(
         "AUTH ERROR:",
-        err.response?.data  err.message  err
+        err.response?.data || err.message  err
       );
       alert(
         err.response?.data?.error ||
