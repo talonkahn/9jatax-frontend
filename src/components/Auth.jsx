@@ -28,7 +28,7 @@ export default function Auth() {
 
       // Persist auth
       localStorage.setItem("9jatax_token", data.token);
-      localStorage.setItem("9jatax_user_id", data.user.id); // ✅ FIXED for CompanyOnboard
+      localStorage.setItem("user_id", data.user.id);
       localStorage.setItem("user_role", data.user.role);
       localStorage.setItem("user_email", data.user.email);
 
