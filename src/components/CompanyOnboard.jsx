@@ -37,7 +37,7 @@ export default function CompanyOnboard() {
 
     try {
       const token = localStorage.getItem("9jatax_token");
-      const owner_user_id = localStorage.getItem("9jatax_user_id"); // 👈 Add this
+      const owner_user_id = localStorage.getItem("9jatax_user_id"); // 👈 REQUIRED
 
       if (!owner_user_id) {
         throw new Error("User not logged in or missing user ID");
@@ -49,7 +49,7 @@ export default function CompanyOnboard() {
       const companyRes = await api.post(
         "/companies",
         {
-          owner_user_id, // 👈 REQUIRED BY BACKEND
+          owner_user_id, // 👈 Backend expects this
           name: company.name,
           rc: company.rc,
           tin: company.tin,
