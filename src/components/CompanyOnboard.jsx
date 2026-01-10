@@ -27,7 +27,7 @@ export default function CompanyOnboard() {
   };
 
   const handleSave = async () => {
-    if (!company.name || !company.rc || !company.tin) {
+    if (!company.name  !company.rc  !company.tin) {
       alert("Please fill Company Name, RC, and TIN.");
       return;
     }
@@ -54,7 +54,7 @@ export default function CompanyOnboard() {
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: Bearer ${token},
           },
         }
       );
@@ -64,46 +64,32 @@ export default function CompanyOnboard() {
       }
 
       /* =====================
-         2️⃣ SAVE TAX SETTINGS
-      ===================== */
-      await api.post(
-        "/company-tax",
-        {
-          company_id: companyRes.data.id,
-          vat_enabled: company.vatRegistered,
-          paye_enabled: company.paye,
-          withholding_enabled: company.withholdingTax,
-          stamp_duty_enabled: company.stampDuty,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      /* =====================
-         3️⃣ REFRESH TOKEN
+         2️⃣ REFRESH TOKEN
       ===================== */
       const refreshRes = await api.post(
         "/auth/refresh",
         null,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: Bearer ${token},
           },
         }
       );
 
-      localStorage.setItem("9jatax_token", refreshRes.data.token);
+      if (refreshRes.data?.token) {
+        localStorage.setItem("9jatax_token", refreshRes.data.token);
+      }
 
       /* =====================
-         4️⃣ GO TO DASHBOARD
+         3️⃣ GO TO DASHBOARD
       ===================== */
       navigate("/dashboard", { replace: true });
 
     } catch (err) {
-      console.error("COMPANY ONBOARD ERROR:", err.response?.data || err.message);
+      console.error(
+        "COMPANY ONBOARD ERROR:",
+        err.response?.data || err.message
+      );
       alert(err.response?.data?.error || err.message);
     } finally {
       setSaving(false);
@@ -135,7 +121,11 @@ export default function CompanyOnboard() {
           onChange={handleChange}
         />
 
-        <select name="industry" value={company.industry} onChange={handleChange}>
+        <select
+          name="industry"
+          value={company.industry}
+          onChange={handleChange}
+        >
           <option value="">Select Industry</option>
           <option value="Logistics">Logistics</option>
           <option value="Retail">Retail</option>
@@ -161,8 +151,7 @@ export default function CompanyOnboard() {
           <input
             type="checkbox"
             name="paye"
-
-checked={company.paye}
+            checked={company.paye}
             onChange={handleChange}
           />
           PAYE
@@ -180,7 +169,8 @@ checked={company.paye}
 
         <label>
           <input
-            type="checkbox"
+
+type="checkbox"
             name="stampDuty"
             checked={company.stampDuty}
             onChange={handleChange}
