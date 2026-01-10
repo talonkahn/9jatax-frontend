@@ -9,6 +9,9 @@ export default function CompanyOnboard() {
 
   const [company, setCompany] = useState({
     name: "",
+    tin: "",
+    rc: "",
+    industry: "",
     vatRegistered: false,
     paye: false,
     withholdingTax: false,
@@ -24,27 +27,35 @@ export default function CompanyOnboard() {
   };
 
   const handleSave = async () => {
-    if (!company.name) {
-      alert("Please enter a company name.");
-      return;
-    }
-
-    const userId = localStorage.getItem("user_id");
-    if (!userId) {
-      alert("User not authenticated. Please log in again.");
+    // ✅ FIXED validation logic
+    if (!company.name || !company.rc || !company.tin) {
+      alert("Please fill Company Name, RC, and TIN.");
       return;
     }
 
     setSaving(true);
 
     try {
+      const token = localStorage.getItem("9jatax_token");
+
       /* =====================
          1️⃣ CREATE COMPANY
       ===================== */
-      const companyRes = await api.post("/companies", {
-        user_id: userId,
-        name: company.name,
-      });
+      const companyRes = await api.post(
+        "/companies",
+        {
+          name: company.name,
+          rc: company.rc,
+          tin: company.tin,
+          industry: company.industry,
+          vat_registered: company.vatRegistered,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // ✅ FIXED
+          },
+        }
+      );
 
       if (!companyRes.data?.id) {
         throw new Error("Company creation failed");
@@ -53,22 +64,34 @@ export default function CompanyOnboard() {
       /* =====================
          2️⃣ SAVE TAX SETTINGS
       ===================== */
-      await api.post("/company-tax", {
-        company_id: companyRes.data.id,
-        vat_enabled: company.vatRegistered,
-        paye_enabled: company.paye,
-        withholding_enabled: company.withholdingTax,
-        stamp_duty_enabled: company.stampDuty,
-      });
+      await api.post(
+        "/company-tax",
+        {
+          company_id: companyRes.data.id,
+          vat_enabled: company.vatRegistered,
+          paye_enabled: company.paye,
+          withholding_enabled: company.withholdingTax,
+          stamp_duty_enabled: company.stampDuty,
+        },
+        {
+          headers: {
+            Authorization: Bearer ${token},
+          },
+        }
+      );
 
       /* =====================
          3️⃣ REFRESH TOKEN
       ===================== */
-      const refreshRes = await api.post("/auth/refresh", null, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("9jatax_token")}`,
-        },
-      });
+      const refreshRes = await api.post(
+        "/auth/refresh",
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // ✅ FIXED
+          },
+        }
+      );
 
       localStorage.setItem("9jatax_token", refreshRes.data.token);
 
@@ -78,10 +101,7 @@ export default function CompanyOnboard() {
       navigate("/dashboard", { replace: true });
 
     } catch (err) {
-      console.error(
-        "COMPANY ONBOARD ERROR:",
-        err.response?.data || err.message
-      );
+      console.error("COMPANY ONBOARD ERROR:", err.response?.data || err.message);
       alert(err.response?.data?.error || err.message);
     } finally {
       setSaving(false);
@@ -100,6 +120,26 @@ export default function CompanyOnboard() {
           value={company.name}
           onChange={handleChange}
         />
+        <input
+          name="rc"
+          placeholder="RC Number"
+          value={company.rc}
+          onChange={handleChange}
+        />
+        <input
+          name="tin"
+          placeholder="TIN"
+          value={company.tin}
+          onChange={handleChange}
+        />
+
+        <select name="industry" value={company.industry} onChange={handleChange}>
+          <option value="">Select Industry</option>
+          <option value="Logistics">Logistics</option>
+          <option value="Retail">Retail</option>
+          <option value="Services">Services</option>
+          <option value="Technology">Technology</option>
+        </select>
       </div>
 
       <div className="company-card">
@@ -119,7 +159,9 @@ export default function CompanyOnboard() {
           <input
             type="checkbox"
             name="paye"
-            checked={company.paye}
+            checked={company.
+
+paye}
             onChange={handleChange}
           />
           PAYE
