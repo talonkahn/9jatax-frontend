@@ -27,7 +27,6 @@ export default function CompanyOnboard() {
   };
 
   const handleSave = async () => {
-    // ✅ Validation
     if (!company.name || !company.rc || !company.tin) {
       alert("Please fill Company Name, RC, and TIN.");
       return;
@@ -37,10 +36,8 @@ export default function CompanyOnboard() {
 
     try {
       const token = localStorage.getItem("9jatax_token");
-      const owner_user_id = localStorage.getItem("9jatax_user_id"); // 👈 REQUIRED
-
-      if (!owner_user_id) {
-        throw new Error("User not logged in or missing user ID");
+      if (!token) {
+        throw new Error("User not authenticated");
       }
 
       /* =====================
@@ -49,7 +46,6 @@ export default function CompanyOnboard() {
       const companyRes = await api.post(
         "/companies",
         {
-          owner_user_id, // 👈 Backend expects this
           name: company.name,
           rc: company.rc,
           tin: company.tin,
@@ -58,7 +54,7 @@ export default function CompanyOnboard() {
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`, // ✅ fixed template literal
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -155,8 +151,7 @@ export default function CompanyOnboard() {
           <input
             type="checkbox"
             name="vatRegistered"
-
-checked={company.vatRegistered}
+            checked={company.vatRegistered}
             onChange={handleChange}
           />
           VAT Registered
@@ -166,7 +161,8 @@ checked={company.vatRegistered}
           <input
             type="checkbox"
             name="paye"
-            checked={company.paye}
+
+checked={company.paye}
             onChange={handleChange}
           />
           PAYE
