@@ -9,9 +9,6 @@ export default function CompanyOnboard() {
 
   const [company, setCompany] = useState({
     name: "",
-    tin: "",
-    rc: "",
-    industry: "",
     vatRegistered: false,
     paye: false,
     withholdingTax: false,
@@ -27,8 +24,14 @@ export default function CompanyOnboard() {
   };
 
   const handleSave = async () => {
-    if (!company.name || !company.rc || !company.tin) {
-      alert("Please fill Company Name, RC, and TIN.");
+    if (!company.name) {
+      alert("Please enter a company name.");
+      return;
+    }
+
+    const userId = localStorage.getItem("user_id");
+    if (!userId) {
+      alert("User not authenticated. Please log in again.");
       return;
     }
 
@@ -39,11 +42,8 @@ export default function CompanyOnboard() {
          1️⃣ CREATE COMPANY
       ===================== */
       const companyRes = await api.post("/companies", {
+        user_id: userId,
         name: company.name,
-        rc: company.rc,
-        tin: company.tin,
-        industry: company.industry,
-        vat_registered: company.vatRegistered,
       });
 
       if (!companyRes.data?.id) {
@@ -62,11 +62,11 @@ export default function CompanyOnboard() {
       });
 
       /* =====================
-         3️⃣ 🔥 REFRESH TOKEN (JWT BECOMES SOURCE OF TRUTH)
+         3️⃣ REFRESH TOKEN
       ===================== */
       const refreshRes = await api.post("/auth/refresh", null, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("9jatax_token")}`,
+          Authorization: Bearer ${localStorage.getItem("9jatax_token")},
         },
       });
 
@@ -78,7 +78,10 @@ export default function CompanyOnboard() {
       navigate("/dashboard", { replace: true });
 
     } catch (err) {
-      console.error("COMPANY ONBOARD ERROR:", err.response?.data || err.message);
+      console.error(
+        "COMPANY ONBOARD ERROR:",
+        err.response?.data || err.message
+      );
       alert(err.response?.data?.error || err.message);
     } finally {
       setSaving(false);
@@ -91,39 +94,54 @@ export default function CompanyOnboard() {
 
       <div className="company-card">
         <h2>Company Information</h2>
-        <input name="name" placeholder="Company Name" value={company.name} onChange={handleChange} />
-        <input name="rc" placeholder="RC Number" value={company.rc} onChange={handleChange} />
-        <input name="tin" placeholder="TIN" value={company.tin} onChange={handleChange} />
-
-        <select name="industry" value={company.industry} onChange={handleChange}>
-          <option value="">Select Industry</option>
-          <option value="Logistics">Logistics</option>
-          <option value="Retail">Retail</option>
-          <option value="Services">Services</option>
-          <option value="Technology">Technology</option>
-        </select>
+        <input
+          name="name"
+          placeholder="Company Name"
+          value={company.name}
+          onChange={handleChange}
+        />
       </div>
 
       <div className="company-card">
         <h2>Tax Settings</h2>
 
         <label>
-          <input type="checkbox" name="vatRegistered" checked={company.vatRegistered} onChange={handleChange} />
+          <input
+            type="checkbox"
+            name="vatRegistered"
+            checked={company.vatRegistered}
+            onChange={handleChange}
+          />
           VAT Registered
         </label>
 
         <label>
-          <input type="checkbox" name="paye" checked={company.paye} onChange={handleChange} />
+          <input
+            type="checkbox"
+            name="paye"
+            checked={company.paye}
+            onChange={handleChange}
+          />
           PAYE
         </label>
 
         <label>
-          <input type="checkbox" name="withholdingTax" checked={company.withholdingTax} onChange={handleChange} />
+          <input
+            type="checkbox"
+            name="withholdingTax"
+            checked={company.withholdingTax}
+            onChange={handleChange}
+          />
           Withholding Tax
         </label>
 
         <label>
-          <input type="checkbox" name="stampDuty" checked={company.stampDuty} onChange={handleChange} />
+          <input
+            type="checkbox"
+            name="stampDuty"
+            checked={company.stampDuty}
+            onChange={handleChange}
+          />
           Stamp Duty
         </label>
       </div>
