@@ -41,9 +41,9 @@ export default function CompanyOnboard() {
       }
 
       /* =====================
-         1️⃣ CREATE COMPANY
+         1️⃣ CREATE COMPANY (ONLY BLOCKER)
       ===================== */
-      const companyRes = await api.post(
+      const { data } = await api.post(
         "/companies",
         {
           name: company.name,
@@ -54,42 +54,46 @@ export default function CompanyOnboard() {
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`, 
           },
         }
       );
 
-      if (!companyRes.data?.id) {
-        throw new Error("Company creation failed");
+      if (!data?.id) {
+        throw new Error("Company creation returned no ID");
       }
 
+      // ✅ CRITICAL: persist company
+      localStorage.setItem("company_id", data.id);
+
       /* =====================
-         2️⃣ REFRESH TOKEN
+         2️⃣ OPTIONAL: SAVE TAX (NON-BLOCKING)
       ===================== */
-      const refreshRes = await api.post(
-        "/auth/refresh",
-        null,
+      api.post(
+        "/company-tax",
+        {
+          company_id: data.id,
+          vat_enabled: company.vatRegistered,
+          paye_enabled: company.paye,
+          withholding_enabled: company.withholdingTax,
+          stamp_duty_enabled: company.stampDuty,
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
-      );
-
-      if (refreshRes.data?.token) {
-        localStorage.setItem("9jatax_token", refreshRes.data.token);
-      }
+      ).catch(() => {
+        // intentionally ignored
+      });
 
       /* =====================
-         3️⃣ GO TO DASHBOARD
+         3️⃣ ENTER DASHBOARD — NO CONDITIONS
       ===================== */
       navigate("/dashboard", { replace: true });
 
     } catch (err) {
-      console.error(
-        "COMPANY ONBOARD ERROR:",
-        err.response?.data || err.message
-      );
+      console.error("COMPANY ONBOARD ERROR:", err);
       alert(err.response?.data?.error || err.message);
     } finally {
       setSaving(false);
@@ -159,7 +163,7 @@ export default function CompanyOnboard() {
 
         <label>
           <input
-            type="checkbox"
+type="checkbox"
             name="withholdingTax"
             checked={company.withholdingTax}
             onChange={handleChange}
@@ -169,8 +173,7 @@ export default function CompanyOnboard() {
 
         <label>
           <input
-
-type="checkbox"
+            type="checkbox"
             name="stampDuty"
             checked={company.stampDuty}
             onChange={handleChange}
